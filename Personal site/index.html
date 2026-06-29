@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xavi Flores</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header id="site-header">
+    <a class="logo" href="index.html">Xavi Flores</a>
+    <nav>
+      <a href="pages/about.html" id="nav-about">About</a>
+      <a href="pages/video.html" id="nav-video">Video</a>
+      <a href="pages/photo.html" id="nav-photo">Photo</a>
+    </nav>
+  </header>
+
+  <!-- Full-bleed background video -->
+  <div class="home-wrap">
+    <video id="bg-video" autoplay muted loop playsinline>
+      <!--
+        Place your video file inside the images/ folder and update the src below.
+        Both mp4 and mov/quicktime sources are listed for broad browser support.
+      -->
+      <source src="images/Timeline.mov" type="video/mp4" />
+      <source src="images/Timeline.mov" type="video/quicktime" />
+    </video>
+    <div class="home-overlay"></div>
+    <p class="home-wordmark">Xavi Flores</p>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>initPage('home');</script>
+
+</body>
+</html>

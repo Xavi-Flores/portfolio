@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video — Xavi Flores</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header id="site-header">
+    <a class="logo" href="../index.html">Xavi Flores</a>
+    <nav>
+      <a href="about.html" id="nav-about">About</a>
+      <a href="video.html" id="nav-video">Video</a>
+      <a href="photo.html" id="nav-photo">Photo</a>
+    </nav>
+  </header>
+
+  <!-- Video List -->
+  <main class="page-wrap">
+    <div class="video-list">
+
+      <div class="video-item"
+           data-title="Vermont Landscapes"
+           data-id="74c73b5d-bbe0-491a-9e83-7813bad80ccd">
+        <iframe src="https://player.mediadelivery.net/embed/596543/74c73b5d-bbe0-491a-9e83-7813bad80ccd?autoplay=false&muted=true&loop=true&preload=true"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen></iframe>
+        <div class="video-item-overlay"></div>
+      </div>
+
+      <div class="video-item"
+           data-title="Valley of Fire"
+           data-id="85c5fe0d-c841-463b-9758-f620382ec623">
+        <iframe src="https://player.mediadelivery.net/embed/596543/85c5fe0d-c841-463b-9758-f620382ec623?autoplay=false&muted=true&loop=true&preload=true"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen></iframe>
+        <div class="video-item-overlay"></div>
+      </div>
+
+      <div class="video-item"
+           data-title="Brooklyn Heights"
+           data-id="0c47a838-f2f5-487f-85b6-e20fa88660d1">
+        <iframe src="https://player.mediadelivery.net/embed/596543/0c47a838-f2f5-487f-85b6-e20fa88660d1?autoplay=false&muted=true&loop=true&preload=true"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen></iframe>
+        <div class="video-item-overlay"></div>
+      </div>
+
+      <div class="video-item"
+           data-title="F1 Vegas GP"
+           data-id="853634e8-2527-4f22-8df4-42db7c9b1652">
+        <iframe src="https://player.mediadelivery.net/embed/596543/853634e8-2527-4f22-8df4-42db7c9b1652?autoplay=false&muted=true&loop=true&preload=true"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen></iframe>
+        <div class="video-item-overlay"></div>
+      </div>
+
+      <div class="video-item"
+           data-title="Cars &amp; Coffee in Tribeca"
+           data-id="2c3914b1-6658-4135-908e-31dadb19f1a6">
+        <iframe src="https://player.mediadelivery.net/embed/596543/2c3914b1-6658-4135-908e-31dadb19f1a6?autoplay=false&muted=true&loop=true&preload=true"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen></iframe>
+        <div class="video-item-overlay"></div>
+      </div>
+
+      <div class="video-item"
+           data-title="Iced Americano"
+           data-id="c3001326-e89d-4e12-9fdb-b7fa22479867">
+        <iframe src="https://player.mediadelivery.net/embed/596543/c3001326-e89d-4e12-9fdb-b7fa22479867?autoplay=false&muted=true&loop=true&preload=true"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen></iframe>
+        <div class="video-item-overlay"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Video Lightbox -->
+  <div class="video-lightbox" id="video-lightbox" role="dialog" aria-modal="true" aria-label="Video viewer">
+    <button class="video-lightbox-close" id="vlb-close" aria-label="Close">&times;</button>
+    <div class="video-lightbox-inner">
+      <iframe id="vlb-iframe" src="" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen></iframe>
+      <p class="video-lightbox-title" id="vlb-title"></p>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/video.js"></script>
+  <script>initPage('video');</script>
+
+</body>
+</html>
