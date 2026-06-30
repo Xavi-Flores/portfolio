@@ -18,6 +18,18 @@
     </nav>
   </header>
 
+  <!-- Quality Toggle: WebM (fast) / MP4 (quality) -->
+  <button class="quality-toggle" id="quality-toggle" aria-pressed="false" aria-label="Toggle video quality">
+    <span class="quality-toggle-track">
+      <span class="quality-toggle-thumb"></span>
+    </span>
+    <span class="quality-toggle-labels">
+      <span class="quality-label quality-label-webm active" id="label-webm">WebM</span>
+      <span class="quality-label-sep">/</span>
+      <span class="quality-label quality-label-mp4" id="label-mp4">MP4</span>
+    </span>
+  </button>
+
   <!-- Video List (populated dynamically by video.js) -->
   <main class="page-wrap">
     <div class="video-list" id="video-list">

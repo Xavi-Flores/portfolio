@@ -379,6 +379,14 @@ nav a.active {
   letter-spacing: 0.02em;
 }
 
+.video-lightbox-description {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: rgba(255,255,255,0.62);
+  max-width: 700px;
+}
+
 .video-lightbox-close {
   position: fixed;
   top: 24px;
@@ -395,6 +403,89 @@ nav a.active {
 }
 
 .video-lightbox-close:hover { opacity: 1; }
+
+/* ─── Quality Toggle (WebM / MP4) ─── */
+.quality-toggle {
+  position: fixed;
+  top: calc(var(--header-h) + 20px);
+  left: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  padding: 6px 14px 6px 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.quality-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.quality-toggle-track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+}
+
+.quality-toggle[aria-pressed="true"] .quality-toggle-track {
+  background: var(--white);
+}
+
+.quality-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--white);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.quality-toggle[aria-pressed="true"] .quality-toggle-thumb {
+  transform: translateX(16px);
+  background: var(--black);
+}
+
+.quality-toggle-labels {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.quality-label {
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s;
+}
+
+.quality-label.active {
+  color: var(--white);
+}
+
+.quality-label-sep {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 600px) {
+  .quality-toggle {
+    top: calc(var(--header-h) + 14px);
+    left: 16px;
+    padding: 5px 12px 5px 5px;
+  }
+}
 
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
