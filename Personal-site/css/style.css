@@ -436,6 +436,36 @@ nav a.active {
   border-color: rgba(255, 255, 255, 0.25);
 }
 
+/* Tooltip */
+.quality-toggle::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 240px;
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.55;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: normal;
+}
+
+.quality-toggle:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .quality-toggle-track {
   position: relative;
   width: 36px;
