@@ -123,6 +123,8 @@ nav a.active {
   padding-top: var(--header-h);
   min-height: 100vh;
   background: var(--black);
+  display: flex;
+  flex-direction: column;
 }
 
 /* ─── About ─── */
@@ -415,9 +417,10 @@ nav a.active {
 
 /* ─── Quality Toggle (WebM / 4K MP4) ─── */
 .quality-toggle {
-  position: fixed;
+  position: sticky;
   top: calc(var(--header-h) + 20px);
-  left: 24px;
+  align-self: flex-start;
+  margin: 20px 0 -20px 24px;
   z-index: 90;
   display: flex;
   align-items: center;
@@ -490,9 +493,7 @@ nav a.active {
 
 @media (max-width: 600px) {
   .quality-toggle {
-    top: calc(var(--header-h) + 14px);
-    left: 16px;
-    padding: 5px 12px 5px 5px;
+    margin: 14px 0 -14px 16px;
   }
 }
 
