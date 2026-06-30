@@ -1,21 +1,65 @@
-// ─── Photo Grid Lightbox ──────────────────────────────────────────────────────
+// ─── Photo Grid: dynamic loading from Bunny Storage + Lightbox ──────────────
 
 (function () {
-  const grid      = document.getElementById('photo-grid');
-  const lightbox  = document.getElementById('lightbox');
-  const lbImg     = document.getElementById('lb-img');
-  const lbCounter = document.getElementById('lb-counter');
-  const lbClose   = document.getElementById('lb-close');
-  const lbPrev    = document.getElementById('lb-prev');
-  const lbNext    = document.getElementById('lb-next');
+  const grid       = document.getElementById('photo-grid');
+  const statusEl   = document.getElementById('photo-status');
+  const lightbox   = document.getElementById('lightbox');
+  const lbImg      = document.getElementById('lb-img');
+  const lbCounter  = document.getElementById('lb-counter');
+  const lbClose    = document.getElementById('lb-close');
+  const lbPrev     = document.getElementById('lb-prev');
+  const lbNext     = document.getElementById('lb-next');
 
-  // Collect all images in order
-  const items = Array.from(grid.querySelectorAll('.photo-grid-item'));
-  const srcs  = items.map(el => el.querySelector('img').src);
-  const alts  = items.map(el => el.querySelector('img').alt);
-  const total = srcs.length;
-
+  let srcs  = [];
+  let alts  = [];
+  let total = 0;
   let current = 0;
+
+  // ── Fetch photo list from the serverless API and build the grid ─────────
+  async function loadPhotos() {
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Loading photos…';
+
+    try {
+      const res = await fetch('/api/photos');
+      if (!res.ok) throw new Error('Request failed: ' + res.status);
+
+      const data = await res.json();
+      const photos = data.photos || [];
+
+      if (photos.length === 0) {
+        statusEl.textContent = 'No photos yet.';
+        return;
+      }
+
+      statusEl.style.display = 'none';
+
+      srcs  = photos.map(p => p.url);
+      alts  = photos.map(p => humanizeFilename(p.name));
+      total = srcs.length;
+
+      grid.innerHTML = photos.map((p, i) => `
+        <div class="photo-grid-item" data-index="${i}">
+          <img src="${p.url}" alt="${humanizeFilename(p.name)}" loading="lazy" />
+        </div>
+      `).join('');
+
+      // Wire up click handlers now that items exist
+      grid.querySelectorAll('.photo-grid-item').forEach((item, i) => {
+        item.addEventListener('click', () => open(i));
+      });
+
+    } catch (err) {
+      statusEl.textContent = 'Could not load photos. Please try again later.';
+      console.error('Photo load error:', err);
+    }
+  }
+
+  function humanizeFilename(name) {
+    return name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+  }
+
+  // ── Lightbox ──────────────────────────────────────────────────────────────
 
   function open(index) {
     current = index;
@@ -46,26 +90,21 @@
     lbCounter.textContent = (current + 1) + ' / ' + total;
   }
 
-  // Open on grid item click
-  items.forEach((item, i) => {
-    item.addEventListener('click', () => open(i));
-  });
-
-  // Controls
   lbClose.addEventListener('click', close);
   lbPrev.addEventListener('click', prev);
   lbNext.addEventListener('click', next);
 
-  // Close on backdrop click
   lightbox.addEventListener('click', e => {
     if (e.target === lightbox) close();
   });
 
-  // Keyboard navigation
   document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape')      close();
-    if (e.key === 'ArrowLeft')   prev();
-    if (e.key === 'ArrowRight')  next();
+    if (e.key === 'Escape')     close();
+    if (e.key === 'ArrowLeft')  prev();
+    if (e.key === 'ArrowRight') next();
   });
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  loadPhotos();
 })();
