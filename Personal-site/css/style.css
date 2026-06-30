@@ -229,8 +229,12 @@ nav a.active {
   inset: 0;
   z-index: 200;
   background: rgba(0, 0, 0, 0.92);
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0;
+  /* Reserve space top and bottom so image never touches chrome */
+  padding: 64px 80px 48px;
 }
 
 .lightbox.open {
@@ -239,16 +243,17 @@ nav a.active {
 
 .lightbox-img-wrap {
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
+  flex: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 0; /* critical: lets flex child shrink below its content size */
 }
 
 .lightbox-img-wrap img {
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   display: block;
   border: none;
@@ -292,15 +297,18 @@ nav a.active {
 .lightbox-arrow.next  { right: 16px; }
 
 .lightbox-counter {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  flex-shrink: 0;
+  padding-top: 14px;
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--white);
   opacity: 0.45;
+}
+
+@media (max-width: 600px) {
+  .lightbox { padding: 56px 48px 36px; }
+  .lightbox-arrow { font-size: 1.6rem; padding: 10px; }
 }
 
 /* ─── Video List ─── */
@@ -325,11 +333,10 @@ nav a.active {
   aspect-ratio: 16 / 9;
   border: none;
   display: block;
-  pointer-events: none; /* click handled by overlay */
   border-radius: 2px;
 }
 
-/* Transparent click-catcher overlay */
+/* Transparent click-catcher overlay — opens lightbox on click */
 .video-item-overlay {
   position: absolute;
   inset: 0;
@@ -377,6 +384,7 @@ nav a.active {
   font-weight: 400;
   color: var(--white);
   letter-spacing: 0.02em;
+  margin: 0;
 }
 
 .video-lightbox-description {
@@ -385,6 +393,7 @@ nav a.active {
   font-weight: 300;
   color: rgba(255,255,255,0.62);
   max-width: 700px;
+  margin: 0;
 }
 
 .video-lightbox-close {
@@ -404,7 +413,7 @@ nav a.active {
 
 .video-lightbox-close:hover { opacity: 1; }
 
-/* ─── Quality Toggle (WebM / MP4) ─── */
+/* ─── Quality Toggle (WebM / 4K MP4) ─── */
 .quality-toggle {
   position: fixed;
   top: calc(var(--header-h) + 20px);
@@ -485,6 +494,38 @@ nav a.active {
     left: 16px;
     padding: 5px 12px 5px 5px;
   }
+}
+
+
+.vlb-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.vlb-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+/* ─── 4K quality badge in lightbox ─── */
+.vlb-quality-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  padding-top: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .vlb-meta     { flex-direction: column; gap: 14px; }
 }
 
 /* ─── Responsive ─── */
