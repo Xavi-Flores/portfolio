@@ -20,14 +20,12 @@
 
   <!-- Full-bleed background video -->
   <div class="home-wrap">
-    <video id="bg-video" autoplay muted loop playsinline>
-      <!--
-        Place your video file inside the images/ folder and update the src below.
-        Both mp4 and mov/quicktime sources are listed for broad browser support.
-      -->
-      <source src="images/Homepage.webm" type="video/webm" />
-      <source src="images/Timeline.mov" type="video/mp4" />
-    </video>
+    <iframe
+      id="bg-video"
+      src="https://player.mediadelivery.net/embed/596543/650e538a-f9e1-4175-801d-6d80d88222fd?autoplay=true&muted=true&loop=true&preload=true&controls=false&quality=1080p"
+      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+      allowfullscreen>
+    </iframe>
     <div class="home-overlay"></div>
     <p class="home-wordmark">Xavi Flores</p>
   </div>

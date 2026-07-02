@@ -1,0 +1,38 @@
+# ─── Media files (served via Bunny CDN — don't commit to repo) ───────────────
+*.mov
+*.mp4
+*.webm
+*.avi
+*.mkv
+*.m4v
+*.wmv
+*.flv
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.avif
+*.tiff
+*.bmp
+*.svg
+*.ico
+
+# ─── System files ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Node / Vercel ────────────────────────────────────────────────────────────
+node_modules/
+.vercel/
+.env
+.env.local
+.env.production
+.env.development
+
+# ─── Editor / IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
