@@ -11,18 +11,46 @@
   <!-- Header -->
   <header id="site-header">
     <a class="logo" href="index.html">Xavi Flores</a>
-    <nav>
+
+    <!-- Desktop nav -->
+    <nav id="desktop-nav">
       <a href="pages/about.html" id="nav-about">About</a>
       <a href="pages/video.html" id="nav-video">Video</a>
       <a href="pages/photo.html" id="nav-photo">Photo</a>
     </nav>
+
+    <!-- Hamburger (mobile only) -->
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </header>
+
+  <!-- Mobile menu overlay -->
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="pages/about.html" id="mnav-about">About</a>
+      <a href="pages/video.html" id="mnav-video">Video</a>
+      <a href="pages/photo.html" id="mnav-photo">Photo</a>
+    </nav>
+  </div>
 
   <!-- Full-bleed background video -->
   <div class="home-wrap">
+    <!-- Desktop: 16:9 landscape video -->
     <iframe
       id="bg-video"
-      src="https://player.mediadelivery.net/embed/596543/c43c58cd-966d-4b44-af6f-b74bf0928020?autoplay=true&muted=true&loop=true&preload=true&controls=false&quality=1080p"
+      class="bg-video-desktop"
+      src="https://player.mediadelivery.net/embed/596543/c43c58cd-966d-4b44-af6f-b74bf0928020?autoplay=true&muted=true&loop=true&preload=true&controls=false&quality=1080p&disableTracking=true"
+      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+      allowfullscreen>
+    </iframe>
+    <!-- Mobile: 9:16 portrait video -->
+    <iframe
+      id="bg-video-mobile"
+      class="bg-video-mobile"
+      src="https://player.mediadelivery.net/embed/596543/8be7654d-aa03-4574-ad6e-ead131890147?autoplay=true&muted=true&loop=true&preload=true&controls=false&disableTracking=true"
       allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
       allowfullscreen>
     </iframe>

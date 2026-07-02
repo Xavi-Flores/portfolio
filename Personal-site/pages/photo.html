@@ -7,34 +7,35 @@
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-
   <!-- Header -->
   <header id="site-header">
     <a class="logo" href="../index.html">Xavi Flores</a>
-    <nav>
+    <nav id="desktop-nav">
       <a href="about.html" id="nav-about">About</a>
       <a href="video.html" id="nav-video">Video</a>
       <a href="photo.html" id="nav-photo">Photo</a>
     </nav>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </header>
-
-  <!-- Photo Grid (populated dynamically by photo.js) -->
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="about.html" id="mnav-about">About</a>
+      <a href="video.html" id="mnav-video">Video</a>
+      <a href="photo.html" id="mnav-photo">Photo</a>
+    </nav>
+  </div>
   <main class="page-wrap">
-    <div class="photo-grid" id="photo-grid">
-      <!-- Photos are fetched from /api/photos and inserted here at runtime -->
-    </div>
-    <p class="placeholder-label" id="photo-status" style="text-align:center; padding: 40px 0; display:none;">
-      Loading photos…
-    </p>
+    <div class="photo-grid" id="photo-grid"></div>
+    <p class="placeholder-label" id="photo-status" style="text-align:center; padding: 40px 0; display:none;">Loading photos…</p>
   </main>
 
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
     <button class="lightbox-close" id="lb-close" aria-label="Close">&times;</button>
     <button class="lightbox-arrow prev" id="lb-prev" aria-label="Previous">&#8592;</button>
-    <div class="lightbox-img-wrap">
-      <img id="lb-img" src="" alt="" />
-    </div>
+    <div class="lightbox-img-wrap"><img id="lb-img" src="" alt="" /></div>
     <button class="lightbox-arrow next" id="lb-next" aria-label="Next">&#8594;</button>
     <p class="lightbox-counter" id="lb-counter"></p>
   </div>
@@ -42,6 +43,5 @@
   <script src="../js/main.js"></script>
   <script src="../js/photo.js"></script>
   <script>initPage('photo');</script>
-
 </body>
 </html>

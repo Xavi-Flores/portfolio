@@ -7,37 +7,38 @@
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-
   <!-- Header -->
   <header id="site-header">
     <a class="logo" href="../index.html">Xavi Flores</a>
-    <nav>
+    <nav id="desktop-nav">
       <a href="about.html" id="nav-about">About</a>
       <a href="video.html" id="nav-video">Video</a>
       <a href="photo.html" id="nav-photo">Photo</a>
     </nav>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </header>
-
-  <!-- Quality Toggle: WebM (fast) / MP4 (quality) -->
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="about.html" id="mnav-about">About</a>
+      <a href="video.html" id="mnav-video">Video</a>
+      <a href="photo.html" id="mnav-photo">Photo</a>
+    </nav>
+  </div>
+  <!-- Quality Toggle -->
   <button class="quality-toggle" id="quality-toggle" aria-pressed="false" aria-label="Toggle video quality">
-    <span class="quality-toggle-track">
-      <span class="quality-toggle-thumb"></span>
-    </span>
+    <span class="quality-toggle-track"><span class="quality-toggle-thumb"></span></span>
     <span class="quality-toggle-labels">
       <span class="quality-label quality-label-webm active" id="label-webm">WebM</span>
       <span class="quality-label-sep">/</span>
-      <span class="quality-label quality-label-mp4" id="label-mp4">MP4</span>
+      <span class="quality-label quality-label-mp4" id="label-mp4">4K MP4</span>
     </span>
   </button>
 
-  <!-- Video List (populated dynamically by video.js) -->
   <main class="page-wrap">
-    <div class="video-list" id="video-list">
-      <!-- Videos are fetched from /api/videos and inserted here at runtime -->
-    </div>
-    <p class="placeholder-label" id="video-status" style="text-align:center; padding: 40px 0; display:none;">
-      Loading videos…
-    </p>
+    <div class="video-list" id="video-list"></div>
+    <p class="placeholder-label" id="video-status" style="text-align:center; padding: 40px 0; display:none;">Loading videos…</p>
   </main>
 
   <!-- Video Lightbox -->
@@ -45,14 +46,18 @@
     <button class="video-lightbox-close" id="vlb-close" aria-label="Close">&times;</button>
     <div class="video-lightbox-inner">
       <iframe id="vlb-iframe" src="" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen></iframe>
-      <p class="video-lightbox-title" id="vlb-title"></p>
-      <p class="video-lightbox-description" id="vlb-description"></p>
+      <div class="vlb-meta">
+        <div class="vlb-text">
+          <p class="video-lightbox-title" id="vlb-title"></p>
+          <p class="video-lightbox-description" id="vlb-description"></p>
+        </div>
+        <p class="vlb-quality-badge" id="vlb-quality" style="display:none;">&#9679; 4K MP4</p>
+      </div>
     </div>
   </div>
 
   <script src="../js/main.js"></script>
   <script src="../js/video.js"></script>
   <script>initPage('video');</script>
-
 </body>
 </html>

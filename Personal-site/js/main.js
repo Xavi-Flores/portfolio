@@ -1,18 +1,49 @@
-// ─── Header: transparent on home, solid on inner pages ───────────────────────
+// ─── Header: transparent on home, solid on inner pages ────────────────────────
 
-const header = document.getElementById('site-header');
+const header      = document.getElementById('site-header');
+const hamburger   = document.getElementById('hamburger');
+const mobileMenu  = document.getElementById('mobile-menu');
 
-// Mark the current page's nav link as active and set header state.
-// Each page passes its own page key on load.
+// ── Page init ────────────────────────────────────────────────────────────────
 function initPage(pageKey) {
-  // Solid header on all pages except home
   if (pageKey === 'home') {
     header.classList.remove('solid');
   } else {
     header.classList.add('solid');
-
-    // Highlight the matching nav link
     const navLink = document.getElementById('nav-' + pageKey);
     if (navLink) navLink.classList.add('active');
+    // Also highlight the matching mobile menu link
+    const mobileLink = document.getElementById('mnav-' + pageKey);
+    if (mobileLink) mobileLink.classList.add('active');
   }
+}
+
+// ── Hamburger menu ────────────────────────────────────────────────────────────
+if (hamburger && mobileMenu) {
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close on link click
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Close on backdrop click
+  mobileMenu.addEventListener('click', e => {
+    if (e.target === mobileMenu) {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+  });
 }
