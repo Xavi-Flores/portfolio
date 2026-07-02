@@ -78,7 +78,9 @@
     observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const iframe = entry.target.querySelector('iframe');
-        const id     = entry.target.dataset.id;
+        const webmId = entry.target.dataset.id;
+        const mp4Id  = entry.target.dataset.mp4Id;
+        const id     = (useMp4 && mp4Id) ? mp4Id : webmId;
         iframe.src   = `${BASE_URL}${libraryId}/${id}?autoplay=${entry.isIntersecting}&muted=true&loop=true&preload=true`;
       });
     }, { threshold: 0.4 });
@@ -140,21 +142,37 @@
       : 'Currently playing in WebM for best web performance. Switch to 4K MP4 for full resolution.';
   }
 
+  function applyQualityToList() {
+    // Disconnect observer during swap so it doesn't immediately overwrite our src change
+    if (observer) observer.disconnect();
+
+    document.querySelectorAll('.video-item').forEach(item => {
+      const iframe  = item.querySelector('iframe');
+      const webmId  = item.dataset.id;
+      const mp4Id   = item.dataset.mp4Id;
+      const id      = (useMp4 && mp4Id) ? mp4Id : webmId;
+      const rect    = item.getBoundingClientRect();
+      const inView  = rect.top < window.innerHeight && rect.bottom > 0;
+      iframe.src    = `${BASE_URL}${libraryId}/${id}?autoplay=${inView}&muted=true&loop=true&preload=true`;
+    });
+
+    // Reconnect observer after a short delay so scroll behaviour resumes
+    setTimeout(() => setupAutoplay(), 200);
+  }
+
   qualityToggle.addEventListener('click', () => {
     useMp4 = !useMp4;
     setToggleUI();
-    console.log('[Toggle] useMp4:', useMp4);
-    console.log('[Toggle] activeItem:', activeItem);
-    console.log('[Toggle] lightbox open:', lightbox.classList.contains('open'));
+
+    // Swap all list videos immediately
+    applyQualityToList();
+
+    // Also swap the lightbox if it's currently open
     if (activeItem && lightbox.classList.contains('open')) {
-      const src = lightboxSrc(activeItem);
-      console.log('[Toggle] switching lightbox to:', src);
-      vlbIframe.src = src;
+      vlbIframe.src = lightboxSrc(activeItem);
       if (vlbQuality) {
         vlbQuality.style.display = (useMp4 && !!activeItem.dataset.mp4Id) ? 'block' : 'none';
       }
-    } else {
-      console.log('[Toggle] lightbox not open — toggle only affects next video opened');
     }
   });
 
