@@ -143,11 +143,18 @@
   qualityToggle.addEventListener('click', () => {
     useMp4 = !useMp4;
     setToggleUI();
+    console.log('[Toggle] useMp4:', useMp4);
+    console.log('[Toggle] activeItem:', activeItem);
+    console.log('[Toggle] lightbox open:', lightbox.classList.contains('open'));
     if (activeItem && lightbox.classList.contains('open')) {
-      vlbIframe.src = lightboxSrc(activeItem);
+      const src = lightboxSrc(activeItem);
+      console.log('[Toggle] switching lightbox to:', src);
+      vlbIframe.src = src;
       if (vlbQuality) {
         vlbQuality.style.display = (useMp4 && !!activeItem.dataset.mp4Id) ? 'block' : 'none';
       }
+    } else {
+      console.log('[Toggle] lightbox not open — toggle only affects next video opened');
     }
   });
 
