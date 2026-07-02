@@ -288,7 +288,38 @@ header.solid {
   opacity: 0.4;
 }
 
-/* ─── Placeholder ─── */
+/* ─── About socials ─── */
+.about-socials {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-socials-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+.about-socials-icons {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.social-icon {
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.social-icon:hover {
+  color: var(--white);
+  transform: translateY(-2px);
+}
 .placeholder {
   display: flex;
   flex-direction: column;
