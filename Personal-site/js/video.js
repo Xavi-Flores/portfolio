@@ -47,7 +47,7 @@
              data-title="${escapeHtml(v.title)}"
              data-description="${escapeHtml(v.description)}">
           <iframe
-            src="${BASE_URL}${libraryId}/${v.id}?autoplay=false&muted=true&loop=true&preload=true"
+            src="${BASE_URL}${libraryId}/${v.id}?autoplay=true&muted=true&loop=true&preload=true"
             loading="lazy"
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
             allowfullscreen></iframe>
@@ -71,21 +71,22 @@
     }[c]));
   }
 
-  // ── Autoplay muted iframes as they scroll into view ───────────────────────
+  // ── Fade videos in/out as they scroll into view (no src swap = no flash) ──
   function setupAutoplay() {
     if (observer) observer.disconnect();
 
     observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const iframe = entry.target.querySelector('iframe');
-        const webmId = entry.target.dataset.id;
-        const mp4Id  = entry.target.dataset.mp4Id;
-        const id     = (useMp4 && mp4Id) ? mp4Id : webmId;
-        iframe.src   = `${BASE_URL}${libraryId}/${id}?autoplay=${entry.isIntersecting}&muted=true&loop=true&preload=true`;
+        iframe.style.opacity = entry.isIntersecting ? '1' : '0';
       });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.2 });
 
-    document.querySelectorAll('.video-item').forEach(item => observer.observe(item));
+    document.querySelectorAll('.video-item').forEach(item => {
+      item.querySelector('iframe').style.opacity = '0';
+      item.querySelector('iframe').style.transition = 'opacity 0.4s ease';
+      observer.observe(item);
+    });
   }
 
   // ── Lightbox ──────────────────────────────────────────────────────────────
@@ -143,21 +144,13 @@
   }
 
   function applyQualityToList() {
-    // Disconnect observer during swap so it doesn't immediately overwrite our src change
-    if (observer) observer.disconnect();
-
     document.querySelectorAll('.video-item').forEach(item => {
-      const iframe  = item.querySelector('iframe');
-      const webmId  = item.dataset.id;
-      const mp4Id   = item.dataset.mp4Id;
-      const id      = (useMp4 && mp4Id) ? mp4Id : webmId;
-      const rect    = item.getBoundingClientRect();
-      const inView  = rect.top < window.innerHeight && rect.bottom > 0;
-      iframe.src    = `${BASE_URL}${libraryId}/${id}?autoplay=${inView}&muted=true&loop=true&preload=true`;
+      const iframe = item.querySelector('iframe');
+      const webmId = item.dataset.id;
+      const mp4Id  = item.dataset.mp4Id;
+      const id     = (useMp4 && mp4Id) ? mp4Id : webmId;
+      iframe.src   = `${BASE_URL}${libraryId}/${id}?autoplay=true&muted=true&loop=true&preload=true`;
     });
-
-    // Reconnect observer after a short delay so scroll behaviour resumes
-    setTimeout(() => setupAutoplay(), 200);
   }
 
   qualityToggle.addEventListener('click', () => {
