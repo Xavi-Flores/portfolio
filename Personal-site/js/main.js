@@ -8,14 +8,36 @@ const mobileMenu  = document.getElementById('mobile-menu');
 function initPage(pageKey) {
   if (pageKey === 'home') {
     header.classList.remove('solid');
+    setupHomepageVideoReset();
   } else {
     header.classList.add('solid');
     const navLink = document.getElementById('nav-' + pageKey);
     if (navLink) navLink.classList.add('active');
-    // Also highlight the matching mobile menu link
     const mobileLink = document.getElementById('mnav-' + pageKey);
     if (mobileLink) mobileLink.classList.add('active');
   }
+}
+
+// ── Homepage video: reload iframes on tab refocus to prevent UI flash ─────────
+function setupHomepageVideoReset() {
+  const iframes = [
+    document.getElementById('bg-video'),
+    document.getElementById('bg-video-mobile'),
+  ].filter(Boolean);
+
+  // Store the original src of each iframe
+  const srcs = iframes.map(f => f.src);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // Brief blank then restore — forces the player to reinitialise
+      // cleanly without showing its UI chrome
+      iframes.forEach((iframe, i) => {
+        iframe.src = '';
+        setTimeout(() => { iframe.src = srcs[i]; }, 50);
+      });
+    }
+  });
 }
 
 // ── Hamburger menu ────────────────────────────────────────────────────────────
@@ -27,7 +49,6 @@ if (hamburger && mobileMenu) {
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
-  // Close on link click
   mobileMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
@@ -37,7 +58,6 @@ if (hamburger && mobileMenu) {
     });
   });
 
-  // Close on backdrop click
   mobileMenu.addEventListener('click', e => {
     if (e.target === mobileMenu) {
       mobileMenu.classList.remove('open');

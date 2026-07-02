@@ -170,6 +170,8 @@ header.solid {
   height: calc(100vw * (9 / 16));
   border: none;
   pointer-events: none;
+  /* Extra scale hides any player UI that appears at the edges */
+  transform: translate(-50%, -50%) scale(1.02);
 }
 
 /* Mobile video (9:16 portrait) — hidden by default */
@@ -178,13 +180,12 @@ header.solid {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  /* For portrait video: height drives the sizing */
   height: 100%;
   width: calc(100vh * (9 / 16));
   min-width: 100%;
   border: none;
   pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.02);
 }
 
 .home-overlay {
@@ -417,6 +418,8 @@ header.solid {
   width: 100%;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
+  border-radius: 2px;
 }
 
 .video-item iframe {
@@ -424,7 +427,8 @@ header.solid {
   aspect-ratio: 16 / 9;
   border: none;
   display: block;
-  border-radius: 2px;
+  /* Slight scale clips the player chrome at edges */
+  transform: scale(1.02);
 }
 
 .video-item-overlay {

@@ -24,7 +24,6 @@
   let useMp4     = false;   // global toggle state
   let activeItem = null;    // video-item currently open in lightbox
 
-  // ── Fetch video list and build the page ────────────────────────────────────
   async function loadVideos() {
     statusEl.style.display = 'block';
     statusEl.textContent = 'Loading videos…';
@@ -162,7 +161,22 @@
     }
   });
 
+  // ── Reset video iframes on tab refocus to prevent player UI flash ────────────
+  function setupVisibilityReset() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        // Only reset list iframes (not the lightbox)
+        document.querySelectorAll('.video-item iframe').forEach(iframe => {
+          const src = iframe.src;
+          if (!src) return;
+          iframe.src = '';
+          setTimeout(() => { iframe.src = src; }, 50);
+        });
+      }
+    });
+  }
+
   // ── Init ──────────────────────────────────────────────────────────────────
   setToggleUI();
-  loadVideos();
+  loadVideos().then(() => setupVisibilityReset());
 })();
