@@ -16,6 +16,31 @@
   --font-body:    'Inter', system-ui, sans-serif;
 }
 
+/* ─── Scrollbar ─── */
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a var(--black);
+}
+
 html, body {
   height: 100%;
   font-family: var(--font-body);
