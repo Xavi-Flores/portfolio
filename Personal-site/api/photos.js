@@ -1,18 +1,18 @@
 // /api/photos.js
 //
-// Vercel Serverless Function — lists files from Bunny Storage and returns
-// public CDN URLs for each. Keeps the Storage API password server-side only.
+// Vercel Serverless Function — lists photos from Bunny Storage, merges with
+// metadata from photos.json (also stored in Bunny), and returns enriched
+// photo objects with category, title, and description.
 //
-// Required environment variables (set in Vercel dashboard → Settings → Environment Variables):
+// Required environment variables:
 //   BUNNY_STORAGE_ZONE      e.g. "xf-photos"
-//   BUNNY_STORAGE_REGION    e.g. "ny" (matches your storage endpoint, e.g. ny.storage.bunnycdn.com)
-//   BUNNY_STORAGE_PASSWORD  the Storage Zone "Password" / AccessKey, found in
-//                           Bunny dashboard → Storage → xf-photos → FTP & API Access
+//   BUNNY_STORAGE_REGION    e.g. "ny"
+//   BUNNY_STORAGE_PASSWORD  Storage Zone password / AccessKey
 //   BUNNY_PULL_ZONE_URL     e.g. "https://xf-photos-pull.b-cdn.net"
 
 export default async function handler(req, res) {
   const zone     = process.env.BUNNY_STORAGE_ZONE;
-  const region   = process.env.BUNNY_STORAGE_REGION || 'storage'; // 'storage' = default/global endpoint
+  const region   = process.env.BUNNY_STORAGE_REGION || 'storage';
   const password = process.env.BUNNY_STORAGE_PASSWORD;
   const pullZone = process.env.BUNNY_PULL_ZONE_URL;
 
@@ -20,21 +20,18 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing required environment variables.' });
   }
 
-  // region "storage" -> storage.bunnycdn.com ; otherwise {region}.storage.bunnycdn.com
-  const host = region === 'storage'
-    ? 'storage.bunnycdn.com'
-    : `${region}.storage.bunnycdn.com`;
-
+  const host    = region === 'storage' ? 'storage.bunnycdn.com' : `${region}.storage.bunnycdn.com`;
   const listUrl = `https://${host}/${zone}/`;
+  const headers = { AccessKey: password, Accept: 'application/json' };
 
   try {
-    const bunnyRes = await fetch(listUrl, {
-      method: 'GET',
-      headers: {
-        AccessKey: password,
-        Accept: 'application/json',
-      },
-    });
+    // Fetch file list and metadata in parallel
+    const [bunnyRes, metaRes] = await Promise.all([
+      fetch(listUrl, { method: 'GET', headers }),
+      fetch(`${pullZone}/photos.json`, { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : [])
+        .catch(() => [])
+    ]);
 
     if (!bunnyRes.ok) {
       const text = await bunnyRes.text();
@@ -43,22 +40,37 @@ export default async function handler(req, res) {
 
     const files = await bunnyRes.json();
 
-    // Only keep actual image files, ignore directories and non-image types
+    // Build a lookup map from filename -> metadata
+    const metaMap = new Map();
+    (metaRes || []).forEach(entry => {
+      if (entry.filename) metaMap.set(entry.filename, entry);
+    });
+
     const imageExtensions = ['.webp', '.jpg', '.jpeg', '.png', '.gif', '.avif'];
 
     const photos = files
       .filter(f => !f.IsDirectory)
+      .filter(f => f.ObjectName !== 'photos.json')
       .filter(f => imageExtensions.some(ext => f.ObjectName.toLowerCase().endsWith(ext)))
-      .map(f => ({
-        name: f.ObjectName,
-        url: `${pullZone}/${f.ObjectName}`,
-        lastChanged: f.LastChanged,
-      }))
-      // Newest uploads first — flip to .reverse() if you'd rather have oldest first
-      .sort((a, b) => new Date(b.lastChanged) - new Date(a.lastChanged));
+      .map(f => {
+        const meta = metaMap.get(f.ObjectName) || {};
+        return {
+          filename:    f.ObjectName,
+          url:         `${pullZone}/${f.ObjectName}`,
+          title:       meta.title || '',
+          description: meta.description || '',
+          category:    meta.category || '',
+          order:       meta.order != null ? meta.order : 9999,
+          lastChanged: f.LastChanged,
+        };
+      })
+      .sort((a, b) => {
+        // Higher order number = appears first (newest additions at top)
+        if (a.order !== 9999 || b.order !== 9999) return b.order - a.order;
+        // Fall back to newest upload first for photos without an order
+        return new Date(b.lastChanged) - new Date(a.lastChanged);
+      });
 
-    // Cache at the edge for 5 minutes so repeat visits are fast,
-    // but new uploads still show up quickly.
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
     return res.status(200).json({ photos });
 
