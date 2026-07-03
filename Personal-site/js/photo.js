@@ -47,13 +47,15 @@
 
   // ── Build filter pills from unique categories ─────────────────────────────
   function buildFilters() {
-    const categories = [...new Set(
-      allPhotos
-        .map(p => p.category)
-        .filter(c => c && c.trim() !== '')
-    )].sort();
+    const categoryOrder = ['People', 'Places', 'Cars', 'Other'];
+    const available = new Set(
+      allPhotos.map(p => p.category).filter(c => c && c.trim() !== '')
+    );
 
-    // Only show filter bar if there are actual categories
+    // Sort by predefined order, then append any unlisted categories
+    const categories = categoryOrder.filter(c => available.has(c));
+    [...available].forEach(c => { if (!categoryOrder.includes(c)) categories.push(c); });
+
     if (categories.length === 0) {
       filterBar.style.display = 'none';
       return;
@@ -64,7 +66,7 @@
     filterBar.innerHTML = ['all', ...categories].map(cat => `
       <button class="filter-btn ${cat === 'all' ? 'active' : ''}"
               data-filter="${cat}">
-        ${cat === 'all' ? 'All' : capitalize(cat)}
+        ${cat === 'all' ? 'All' : cat}
       </button>
     `).join('');
 
