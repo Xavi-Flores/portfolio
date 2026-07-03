@@ -49,22 +49,12 @@
 
   <!-- Full-bleed background video -->
   <div class="home-wrap">
-    <!-- Desktop: 16:9 landscape video -->
-    <iframe
-      id="bg-video"
-      class="bg-video-desktop"
-      src="https://player.mediadelivery.net/embed/596543/c43c58cd-966d-4b44-af6f-b74bf0928020?autoplay=true&muted=true&loop=true&preload=true&controls=false&quality=1080p&disableTracking=true"
-      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-      allowfullscreen>
-    </iframe>
-    <!-- Mobile: 9:16 portrait video -->
-    <iframe
-      id="bg-video-mobile"
-      class="bg-video-mobile"
-      src="https://player.mediadelivery.net/embed/596543/8be7654d-aa03-4574-ad6e-ead131890147?autoplay=true&muted=true&loop=true&preload=true&controls=false&disableTracking=true"
-      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-      allowfullscreen>
-    </iframe>
+    <video class="bg-video-desktop" autoplay muted loop playsinline>
+      <source src="https://xf-video-pull.b-cdn.net/Homepage-1080.mov" type="video/mp4" />
+    </video>
+    <video class="bg-video-mobile" autoplay muted loop playsinline>
+      <source src="https://xf-video-pull.b-cdn.net/Homepage-1080-m.mov" type="video/mp4" />
+    </video>
     <div class="home-overlay"></div>
   </div>
 
