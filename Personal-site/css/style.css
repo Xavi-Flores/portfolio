@@ -536,7 +536,7 @@ header.solid {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
+  gap: 4px;
   padding: calc(var(--header-h) + 36px + 20px + 20px) 24px 100px;
   max-width: 1000px;
   margin: 0 auto;
@@ -761,7 +761,7 @@ header.solid {
 
   .video-list {
     max-width: 100%;
-    gap: 0;
+    gap: 4px;
     padding: calc(var(--header-h) + 36px + 20px + 20px) 20px 80px;
   }
 
@@ -812,7 +812,7 @@ header.solid {
 
   /* Video list */
   .video-list {
-    gap: 0;
+    gap: 4px;
     padding: calc(var(--header-h) + 36px + 16px + 16px) 12px 60px;
   }
 
