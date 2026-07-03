@@ -801,7 +801,12 @@ header.solid {
   .about-body     { font-size: 0.95rem; }
 
   /* Photo grid */
-  .photo-grid { grid-template-columns: 1fr; gap: 3px; padding: 3px; }
+  .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; padding: 3px; }
+
+  /* Filter bar */
+  .photo-filter-bar { padding: 10px 12px; gap: 6px; }
+  .filter-btn { font-size: 0.62rem; padding: 4px 12px; }
+  .page-wrap.has-filters { padding-top: calc(var(--header-h) + 47px); }
 
   /* Photo lightbox */
   .lightbox         { padding: 52px 12px 36px; }
