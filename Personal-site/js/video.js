@@ -1,23 +1,17 @@
-// ─── Video Page: dynamic loading + autoplay on scroll + lightbox quality toggle ──
+// ─── Video Page: preview clips + Stream lightbox ──────────────────────────────
 
 (function () {
-  const BASE_URL = 'https://player.mediadelivery.net/embed/';
+  const EMBED_BASE = 'https://player.mediadelivery.net/embed/';
 
-  const list          = document.getElementById('video-list');
-  const statusEl      = document.getElementById('video-status');
-  const lightbox      = document.getElementById('video-lightbox');
-  const vlbIframe     = document.getElementById('vlb-iframe');
-  const vlbTitle      = document.getElementById('vlb-title');
-  const vlbDesc       = document.getElementById('vlb-description');
-  const vlbClose      = document.getElementById('vlb-close');
-  const qualityToggle = document.getElementById('quality-toggle');
-  const labelWebm     = document.getElementById('label-webm');
-  const labelMp4      = document.getElementById('label-mp4');
-  const vlbQuality    = document.getElementById('vlb-quality');
+  const list      = document.getElementById('video-list');
+  const statusEl  = document.getElementById('video-status');
+  const lightbox  = document.getElementById('video-lightbox');
+  const vlbIframe = document.getElementById('vlb-iframe');
+  const vlbTitle  = document.getElementById('vlb-title');
+  const vlbDesc   = document.getElementById('vlb-description');
+  const vlbClose  = document.getElementById('vlb-close');
 
   let libraryId  = null;
-  let observer   = null;
-  let useMp4     = false;
   let activeItem = null;
 
   // ── Fetch video list and build the page ──────────────────────────────────
@@ -42,20 +36,16 @@
 
       list.innerHTML = videos.map(v => `
         <div class="video-item"
-             data-id="${v.id}"
-             data-mp4-id="${v.mp4Id || ''}"
+             data-video-id="${v.videoId}"
              data-title="${escapeHtml(v.title)}"
              data-description="${escapeHtml(v.description)}">
-          <iframe
-            src="${BASE_URL}${libraryId}/${v.id}?autoplay=true&muted=true&loop=true&preload=true"
-            loading="lazy"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-            allowfullscreen></iframe>
+          <video class="video-preview" autoplay muted loop playsinline>
+            <source src="${v.previewUrl}" type="video/${v.previewExt === 'mov' ? 'mp4' : v.previewExt}" />
+          </video>
           <div class="video-item-overlay"></div>
         </div>
       `).join('');
 
-      setupAutoplay();
       setupClickHandlers();
       setupVisibilityReset();
 
@@ -71,50 +61,23 @@
     }[c]));
   }
 
-  // ── Fade videos in/out as they scroll into view (no src swap = no flash) ──
-  function setupAutoplay() {
-    if (observer) observer.disconnect();
-
-    observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const iframe = entry.target.querySelector('iframe');
-        iframe.style.opacity = entry.isIntersecting ? '1' : '0';
-      });
-    }, { threshold: 0.2 });
-
-    document.querySelectorAll('.video-item').forEach(item => {
-      item.querySelector('iframe').style.opacity = '0';
-      item.querySelector('iframe').style.transition = 'opacity 0.4s ease';
-      observer.observe(item);
-    });
-  }
-
   // ── Lightbox ──────────────────────────────────────────────────────────────
   function setupClickHandlers() {
     document.querySelectorAll('.video-item').forEach(item => {
       item.querySelector('.video-item-overlay').addEventListener('click', () => {
-        openLightbox(item);
+        if (item.dataset.videoId) openLightbox(item);
       });
     });
   }
 
-  function lightboxSrc(item) {
-    const webmId = item.dataset.id;
-    const mp4Id  = item.dataset.mp4Id;
-    const id     = (useMp4 && mp4Id) ? mp4Id : webmId;
-    return `${BASE_URL}${libraryId}/${id}?autoplay=true&muted=false&loop=false&preload=true`;
-  }
-
   function openLightbox(item) {
-    activeItem            = item;
-    vlbIframe.src         = lightboxSrc(item);
+    activeItem    = item;
+    const videoId = item.dataset.videoId;
+
+    vlbIframe.src         = `${EMBED_BASE}${libraryId}/${videoId}?autoplay=true&muted=false&loop=false&preload=true`;
     vlbTitle.textContent  = item.dataset.title;
     vlbDesc.textContent   = item.dataset.description;
     vlbDesc.style.display = item.dataset.description ? 'block' : 'none';
-
-    if (vlbQuality) {
-      vlbQuality.style.display = (useMp4 && !!item.dataset.mp4Id) ? 'block' : 'none';
-    }
 
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -133,57 +96,18 @@
     if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
   });
 
-  // ── Global quality toggle ─────────────────────────────────────────────────
-  function setToggleUI() {
-    qualityToggle.setAttribute('aria-pressed', useMp4 ? 'true' : 'false');
-    labelWebm.classList.toggle('active', !useMp4);
-    labelMp4.classList.toggle('active', useMp4);
-    qualityToggle.dataset.tooltip = useMp4
-      ? 'Currently playing in 4K MP4 for best quality. Switch to WebM for faster loading.'
-      : 'Currently playing in WebM for best web performance. Switch to 4K MP4 for full resolution.';
-  }
-
-  function applyQualityToList() {
-    document.querySelectorAll('.video-item').forEach(item => {
-      const iframe = item.querySelector('iframe');
-      const webmId = item.dataset.id;
-      const mp4Id  = item.dataset.mp4Id;
-      const id     = (useMp4 && mp4Id) ? mp4Id : webmId;
-      iframe.src   = `${BASE_URL}${libraryId}/${id}?autoplay=true&muted=true&loop=true&preload=true`;
-    });
-  }
-
-  qualityToggle.addEventListener('click', () => {
-    useMp4 = !useMp4;
-    setToggleUI();
-
-    // Swap all list videos immediately
-    applyQualityToList();
-
-    // Also swap the lightbox if it's currently open
-    if (activeItem && lightbox.classList.contains('open')) {
-      vlbIframe.src = lightboxSrc(activeItem);
-      if (vlbQuality) {
-        vlbQuality.style.display = (useMp4 && !!activeItem.dataset.mp4Id) ? 'block' : 'none';
-      }
-    }
-  });
-
-  // ── Reset list iframes on tab refocus to prevent player UI flash ──────────
+  // ── Reset preview videos on tab refocus ──────────────────────────────────
   function setupVisibilityReset() {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        document.querySelectorAll('.video-item iframe').forEach(iframe => {
-          const src = iframe.src;
-          if (!src) return;
-          iframe.src = '';
-          setTimeout(() => { iframe.src = src; }, 50);
+        document.querySelectorAll('.video-preview').forEach(video => {
+          video.currentTime = 0;
+          video.play().catch(() => {});
         });
       }
     });
   }
 
   // ── Init ─────────────────────────────────────────────────────────────────
-  setToggleUI();
   loadVideos();
 })();
