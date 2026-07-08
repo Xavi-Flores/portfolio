@@ -24,10 +24,12 @@
     statusEl.textContent = 'Loading photos…';
 
     try {
-      const res = await fetch('/api/photos');
-      if (!res.ok) throw new Error('Request failed: ' + res.status);
+      const data = window.__PRELOADED_PHOTOS__ || await (async () => {
+        const res = await fetch('/api/photos');
+        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        return res.json();
+      })();
 
-      const data = await res.json();
       allPhotos  = data.photos || [];
 
       if (allPhotos.length === 0) {

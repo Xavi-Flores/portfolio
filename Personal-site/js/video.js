@@ -20,10 +20,12 @@
     statusEl.textContent = 'Loading videos…';
 
     try {
-      const res = await fetch('/api/videos');
-      if (!res.ok) throw new Error('Request failed: ' + res.status);
+      const data = window.__PRELOADED_VIDEOS__ || await (async () => {
+        const res = await fetch('/api/videos');
+        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        return res.json();
+      })();
 
-      const data   = await res.json();
       const videos = data.videos || [];
       libraryId    = data.libraryId;
 

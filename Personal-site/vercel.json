@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/pages/video.html", "destination": "/api/video-page" },
+    { "source": "/pages/photo.html", "destination": "/api/photo-page" }
+  ]
+}
