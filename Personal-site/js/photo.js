@@ -24,10 +24,12 @@
     statusEl.textContent = 'Loading photos…';
 
     try {
-      const res = await fetch('/api/photos');
-      if (!res.ok) throw new Error('Request failed: ' + res.status);
+      const data = window.__PRELOADED_PHOTOS__ || await (async () => {
+        const res = await fetch('/api/photos');
+        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        return res.json();
+      })();
 
-      const data = await res.json();
       allPhotos  = data.photos || [];
 
       if (allPhotos.length === 0) {
@@ -148,7 +150,9 @@
   lbClose.addEventListener('click', close);
   lbPrev.addEventListener('click', prev);
   lbNext.addEventListener('click', next);
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+  lightbox.addEventListener('click', e => {
+    if (!e.target.closest('#lb-img, .lightbox-close, .lightbox-arrow')) close();
+  });
   document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape')     close();
