@@ -150,7 +150,9 @@
   lbClose.addEventListener('click', close);
   lbPrev.addEventListener('click', prev);
   lbNext.addEventListener('click', next);
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+  lightbox.addEventListener('click', e => {
+    if (!e.target.closest('#lb-img, .lightbox-close, .lightbox-arrow')) close();
+  });
   document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape')     close();
