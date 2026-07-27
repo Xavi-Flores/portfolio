@@ -317,6 +317,23 @@ header.solid {
   gap: 28px;
 }
 
+.about-socials-email {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+}
+
+.about-socials-email a {
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.about-socials-email a:hover {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
 .social-icon {
   color: rgba(255, 255, 255, 0.55);
   transition: color 0.2s, transform 0.2s;
@@ -328,6 +345,60 @@ header.solid {
   color: var(--white);
   transform: translateY(-2px);
 }
+
+/* ─── About Photo Carousel ─── */
+.about-carousel {
+  position: relative;
+  height: 300px;
+  margin: 48px 0 56px;
+}
+
+.carousel-photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 210px;
+  aspect-ratio: 760 / 900;
+  overflow: hidden;
+  background: #111;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+}
+
+.carousel-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.carousel-photo.is-center {
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  z-index: 3;
+  opacity: 1;
+  cursor: default;
+}
+
+.carousel-photo.is-left {
+  transform: translate(-100%, -50%) scale(0.78) rotate(-6deg);
+  z-index: 1;
+  opacity: 0.22;
+}
+
+.carousel-photo.is-right {
+  transform: translate(0%, -50%) scale(0.78) rotate(6deg);
+  z-index: 1;
+  opacity: 0.22;
+}
+
+.carousel-photo.is-left:hover,
+.carousel-photo.is-right:hover {
+  opacity: 0.4;
+}
+
 .placeholder {
   display: flex;
   flex-direction: column;
@@ -691,6 +762,9 @@ header.solid {
   .video-lightbox-inner { width: 94vw; }
 
   .about-inner { padding: 60px 28px 100px; }
+
+  .about-carousel { height: 260px; }
+  .carousel-photo { width: 180px; }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -717,6 +791,11 @@ header.solid {
   .about-heading  { margin-bottom: 32px; }
   .about-divider  { margin: 36px 0; }
   .about-body     { font-size: 0.95rem; }
+
+  .about-carousel { height: 170px; margin: 32px 0 40px; }
+  .carousel-photo { width: 108px; }
+  .carousel-photo.is-left  { transform: translate(-95%, -50%) scale(0.76) rotate(-6deg); }
+  .carousel-photo.is-right { transform: translate(-5%, -50%) scale(0.76) rotate(6deg); }
 
   /* Photo grid */
   .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; padding: 3px; }
