@@ -80,7 +80,7 @@ export default async function handler(req, res) {
   const html = renderPage({
     title: 'Photo — Xavi Flores',
     description: 'Browse photography by Xavi Flores — portraits, landscapes, cars, and more.',
-    canonical: 'https://xaviflores.com/pages/photo.html',
+    canonical: 'https://www.xaviflores.com/pages/photo.html',
     activePage: 'photo',
     bodyHtml,
     bootstrapScript,

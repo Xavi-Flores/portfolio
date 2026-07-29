@@ -8,8 +8,8 @@ const PERSON_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Xavi Flores',
-  url: 'https://xaviflores.com',
-  image: 'https://xaviflores.com/images/og-image.webp',
+  url: 'https://www.xaviflores.com',
+  image: 'https://www.xaviflores.com/images/og-image.webp',
   jobTitle: 'Filmmaker & Photographer',
   address: {
     '@type': 'PostalAddress',
@@ -45,11 +45,11 @@ export function renderPage({ title, description, canonical, activePage, bodyHtml
   <meta property="og:url" content="${canonical}" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
-  <meta property="og:image" content="https://xaviflores.com/images/og-image.webp" />
+  <meta property="og:image" content="https://www.xaviflores.com/images/og-image.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
-  <meta name="twitter:image" content="https://xaviflores.com/images/og-image.webp" />
+  <meta name="twitter:image" content="https://www.xaviflores.com/images/og-image.webp" />
   <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon-32x32.png" />
   <link rel="stylesheet" href="../css/style.css" />

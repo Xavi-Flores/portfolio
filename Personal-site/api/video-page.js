@@ -62,7 +62,7 @@ export default async function handler(req, res) {
   const html = renderPage({
     title: 'Video — Xavi Flores',
     description: 'Watch films and video work by Xavi Flores — Brooklyn-based filmmaker & photographer.',
-    canonical: 'https://xaviflores.com/pages/video.html',
+    canonical: 'https://www.xaviflores.com/pages/video.html',
     activePage: 'video',
     bodyHtml,
     bootstrapScript,

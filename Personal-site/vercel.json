@@ -7,13 +7,13 @@
     {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "my-portfolio.vercel.app" }],
-      "destination": "https://xaviflores.com/:path*",
+      "destination": "https://www.xaviflores.com/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.xaviflores.com" }],
-      "destination": "https://xaviflores.com/:path*",
+      "has": [{ "type": "host", "value": "xaviflores.com" }],
+      "destination": "https://www.xaviflores.com/:path*",
       "permanent": true
     }
   ]
