@@ -2,5 +2,13 @@
   "rewrites": [
     { "source": "/pages/video.html", "destination": "/api/video-page" },
     { "source": "/pages/photo.html", "destination": "/api/photo-page" }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "my-portfolio.vercel.app" }],
+      "destination": "https://xaviflores.com/:path*",
+      "permanent": true
+    }
   ]
 }
