@@ -312,6 +312,23 @@ header.solid {
   gap: 20px;
 }
 
+.about-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.about-availability-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.18);
+  flex-shrink: 0;
+}
+
 .about-socials-label {
   font-size: 0.68rem;
   letter-spacing: 0.2em;
