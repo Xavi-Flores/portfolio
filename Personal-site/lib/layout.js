@@ -62,6 +62,7 @@ export function renderPage({ title, description, canonical, activePage, bodyHtml
       <a href="about.html" id="nav-about">About</a>
       <a href="video.html" id="nav-video">Video</a>
       <a href="photo.html" id="nav-photo">Photo</a>
+      <a href="clients.html" id="nav-clients">Clients</a>
     </nav>
     <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -72,6 +73,7 @@ export function renderPage({ title, description, canonical, activePage, bodyHtml
       <a href="about.html" id="mnav-about">About</a>
       <a href="video.html" id="mnav-video">Video</a>
       <a href="photo.html" id="mnav-photo">Photo</a>
+      <a href="clients.html" id="mnav-clients">Clients</a>
     </nav>
   </div>
   ${bodyHtml}

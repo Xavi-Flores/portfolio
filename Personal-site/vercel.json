@@ -1,7 +1,8 @@
 {
   "rewrites": [
     { "source": "/pages/video.html", "destination": "/api/video-page" },
-    { "source": "/pages/photo.html", "destination": "/api/photo-page" }
+    { "source": "/pages/photo.html", "destination": "/api/photo-page" },
+    { "source": "/pages/clients.html", "destination": "/api/client-page" }
   ],
   "redirects": [
     {
