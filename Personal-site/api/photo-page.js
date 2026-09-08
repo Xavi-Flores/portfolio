@@ -9,7 +9,7 @@
 import { getPhotos } from '../lib/photos.js';
 import { renderPage, escapeHtml } from '../lib/layout.js';
 
-const CATEGORY_ORDER = ['People', 'Places', 'Cars', 'Other'];
+const CATEGORY_ORDER = ['People', 'Places', 'Cars', 'Architecture', 'Other'];
 
 function humanize(name) {
   return (name || '').replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
@@ -22,7 +22,7 @@ function renderPhotoItem(p, i) {
 }
 
 function buildCategories(photos) {
-  const available = new Set(photos.map(p => p.category).filter(c => c && c.trim() !== ''));
+  const available = new Set(photos.flatMap(p => p.categories || []));
   const categories = CATEGORY_ORDER.filter(c => available.has(c));
   [...available].forEach(c => { if (!categories.includes(c)) categories.push(c); });
   return categories;

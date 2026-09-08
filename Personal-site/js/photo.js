@@ -49,9 +49,9 @@
 
   // ── Build filter pills from unique categories ─────────────────────────────
   function buildFilters() {
-    const categoryOrder = ['People', 'Places', 'Cars', 'Other'];
+    const categoryOrder = ['People', 'Places', 'Cars', 'Architecture', 'Other'];
     const available = new Set(
-      allPhotos.map(p => p.category).filter(c => c && c.trim() !== '')
+      allPhotos.flatMap(p => p.categories || [])
     );
 
     // Sort by predefined order, then append any unlisted categories
@@ -86,7 +86,7 @@
   function renderGrid(filter) {
     filtered = filter === 'all'
       ? allPhotos
-      : allPhotos.filter(p => p.category === filter);
+      : allPhotos.filter(p => (p.categories || []).includes(filter));
 
     grid.innerHTML = filtered.map((p, i) => `
       <div class="photo-grid-item" data-index="${i}">

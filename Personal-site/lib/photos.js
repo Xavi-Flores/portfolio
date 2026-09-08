@@ -50,12 +50,17 @@ export async function getPhotos() {
     .filter(f => imageExtensions.some(ext => f.ObjectName.toLowerCase().endsWith(ext)))
     .map(f => {
       const meta = metaMap.get(f.ObjectName) || {};
+      // "category" in photos.json may be a single string or an array of strings.
+      const rawCategory = meta.category;
+      const categories = (Array.isArray(rawCategory) ? rawCategory : [rawCategory])
+        .filter(c => typeof c === 'string' && c.trim() !== '')
+        .map(c => c.trim());
       return {
         filename:    f.ObjectName,
         url:         `${pullZone}/${f.ObjectName}`,
         title:       meta.title || '',
         description: meta.description || '',
-        category:    meta.category || '',
+        categories,
         order:       meta.order != null ? meta.order : 9999,
         lastChanged: f.LastChanged,
       };
