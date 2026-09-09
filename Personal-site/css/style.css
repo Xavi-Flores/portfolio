@@ -497,6 +497,61 @@ header.solid {
   border-color: var(--white);
 }
 
+/* ── Sub-filter dropdowns ─────────────────────────────────────────────────── */
+.filter-group {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.filter-caret {
+  font-size: 0.6em;
+  opacity: 0.7;
+  margin-left: 2px;
+}
+
+.filter-menu { display: none; }
+
+/* Mouse devices: hover dropdown below the parent pill. The bar stops being a
+   scroll container here so the menu isn't clipped. */
+@media (hover: hover) and (pointer: fine) {
+  .photo-filter-bar { overflow-x: visible; }
+
+  .filter-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding-top: 10px; /* hover bridge between pill and menu */
+    z-index: 90;
+  }
+
+  .filter-group:hover .filter-menu { display: block; }
+
+  .filter-menu-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    background: var(--black);
+    border: 1px solid #1e1e1e;
+    border-radius: 14px;
+    padding: 8px;
+  }
+}
+
+/* Touch devices: tapping the parent pill expands its children inline in the
+   scrollable bar (no hover available). */
+@media (hover: none), (pointer: coarse) {
+  .filter-group.open .filter-menu { display: block; margin-left: 8px; }
+
+  .filter-menu-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
 /* Push grid down when filter bar is visible */
 .page-wrap.has-filters {
   padding-top: calc(var(--header-h) + 53px);

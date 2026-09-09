@@ -9,7 +9,14 @@
 import { getPhotos } from '../lib/photos.js';
 import { renderPage, escapeHtml } from '../lib/layout.js';
 
-const CATEGORY_ORDER = ['People', 'Places', 'Cars', 'Architecture', 'Other'];
+const CATEGORY_ORDER = ['People', 'Places', 'Cars', 'Architecture', 'Sports', 'Other'];
+
+// Mirrors SUBCATEGORIES in js/photo.js — keep the two in sync.
+const SUBCATEGORIES = {
+  Sports: ['F1', 'U.S. Open 2026', 'Baseball'],
+};
+const PARENT_OF = {};
+Object.keys(SUBCATEGORIES).forEach(p => SUBCATEGORIES[p].forEach(c => { PARENT_OF[c] = p; }));
 
 function humanize(name) {
   return (name || '').replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
@@ -33,10 +40,27 @@ function renderPhotoItem(p, i) {
 }
 
 function buildCategories(photos) {
-  const available = new Set(photos.flatMap(p => p.categories || []));
+  const available = new Set();
+  photos.forEach(p => (p.categories || []).forEach(c => {
+    available.add(c);
+    if (PARENT_OF[c]) available.add(PARENT_OF[c]);
+  }));
   const categories = CATEGORY_ORDER.filter(c => available.has(c));
-  [...available].forEach(c => { if (!categories.includes(c)) categories.push(c); });
-  return categories;
+  [...available].forEach(c => { if (!categories.includes(c) && !PARENT_OF[c]) categories.push(c); });
+  return { categories, available };
+}
+
+function renderFilterPill(cat, available) {
+  const children = (SUBCATEGORIES[cat] || []).filter(c => available.has(c));
+  const btn = `
+    <button class="filter-btn" data-filter="${escapeHtml(cat)}">${escapeHtml(cat)}${children.length ? ' <span class="filter-caret">&#9662;</span>' : ''}</button>`;
+  if (!children.length) return btn;
+  return `
+    <div class="filter-group">${btn}
+      <div class="filter-menu"><div class="filter-menu-inner">${children.map(c => `
+        <button class="filter-btn" data-filter="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}
+      </div></div>
+    </div>`;
 }
 
 export default async function handler(req, res) {
@@ -53,12 +77,11 @@ export default async function handler(req, res) {
     preloaded = null;
   }
 
-  const categories = buildCategories(photos);
+  const { categories, available } = buildCategories(photos);
   const filterBarHtml = categories.length
     ? `
   <div class="photo-filter-bar" id="photo-filters" style="display:flex;">
-    <button class="filter-btn active" data-filter="all">All</button>${categories.map(c => `
-    <button class="filter-btn" data-filter="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}
+    <button class="filter-btn active" data-filter="all">All</button>${categories.map(c => renderFilterPill(c, available)).join('')}
   </div>`
     : `
   <div class="photo-filter-bar" id="photo-filters" style="display:none;"></div>`;

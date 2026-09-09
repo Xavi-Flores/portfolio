@@ -53,16 +53,34 @@
     }
   }
 
+  // ── Sub-filter hierarchy ──────────────────────────────────────────────────
+  // Parent category -> child categories shown in its dropdown. A photo tagged
+  // with a child (e.g. "F1") counts for the parent ("Sports") too, so photos
+  // don't need both tags. Child names must be unique across parents.
+  const SUBCATEGORIES = {
+    Sports: ['F1', 'U.S. Open 2026', 'Baseball'],
+  };
+  const PARENT_OF = {};
+  Object.keys(SUBCATEGORIES).forEach(p => SUBCATEGORIES[p].forEach(c => { PARENT_OF[c] = p; }));
+
+  function matchesFilter(p, filter) {
+    const cats = p.categories || [];
+    return cats.includes(filter) || cats.some(c => PARENT_OF[c] === filter);
+  }
+
   // ── Build filter pills from unique categories ─────────────────────────────
   function buildFilters() {
-    const categoryOrder = ['People', 'Places', 'Cars', 'Architecture', 'Other'];
-    const available = new Set(
-      allPhotos.flatMap(p => p.categories || [])
-    );
+    const categoryOrder = ['People', 'Places', 'Cars', 'Architecture', 'Sports', 'Other'];
+    const available = new Set();
+    allPhotos.forEach(p => (p.categories || []).forEach(c => {
+      available.add(c);
+      if (PARENT_OF[c]) available.add(PARENT_OF[c]);
+    }));
 
-    // Sort by predefined order, then append any unlisted categories
+    // Top-level pills: predefined order first, then unlisted categories that
+    // aren't someone's child (children only appear inside their dropdown)
     const categories = categoryOrder.filter(c => available.has(c));
-    [...available].forEach(c => { if (!categoryOrder.includes(c)) categories.push(c); });
+    [...available].forEach(c => { if (!categoryOrder.includes(c) && !PARENT_OF[c]) categories.push(c); });
 
     if (categories.length === 0) {
       filterBar.style.display = 'none';
@@ -71,24 +89,49 @@
 
     filterBar.style.display = 'flex';
     document.querySelector('.page-wrap').classList.add('has-filters');
-    filterBar.innerHTML = ['all', ...categories].map(cat => `
+    filterBar.innerHTML = ['all', ...categories].map(cat => {
+      const children = (SUBCATEGORIES[cat] || []).filter(c => available.has(c));
+      const btn = `
       <button class="filter-btn ${cat === 'all' ? 'active' : ''}"
               data-filter="${cat}">
-        ${cat === 'all' ? 'All' : cat}
-      </button>
-    `).join('');
+        ${cat === 'all' ? 'All' : cat}${children.length ? ' <span class="filter-caret">&#9662;</span>' : ''}
+      </button>`;
+      if (!children.length) return btn;
+      return `
+      <div class="filter-group">${btn}
+        <div class="filter-menu"><div class="filter-menu-inner">${children.map(c => `
+          <button class="filter-btn" data-filter="${c}">${c}</button>`).join('')}
+        </div></div>
+      </div>`;
+    }).join('');
 
     filterBar.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => setFilter(btn.dataset.filter, true));
+      btn.addEventListener('click', () => {
+        setFilter(btn.dataset.filter, true);
+        // A parent pill also toggles its dropdown (matters on touch devices,
+        // where there is no hover)
+        if (btn.nextElementSibling && btn.nextElementSibling.classList.contains('filter-menu')) {
+          btn.closest('.filter-group').classList.toggle('open');
+        }
+      });
     });
   }
 
   // ── Apply a filter: update pills, grid, and the shareable URL ────────────
   function setFilter(filter, updateUrl) {
     activeFilter = filter;
-    filterBar.querySelectorAll('.filter-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.filter === filter)
-    );
+    filterBar.querySelectorAll('.filter-btn').forEach(b => {
+      const f = b.dataset.filter;
+      b.classList.toggle('active', f === filter || (SUBCATEGORIES[f] || []).includes(filter));
+    });
+    // Keep a dropdown open only while its parent or one of its children is
+    // active; opening a child directly (e.g. from a ?filter= link) reveals it
+    filterBar.querySelectorAll('.filter-group').forEach(g => {
+      const parent = g.querySelector('.filter-btn').dataset.filter;
+      const related = parent === filter || (SUBCATEGORIES[parent] || []).includes(filter);
+      if (!related) g.classList.remove('open');
+      else if (PARENT_OF[filter] === parent) g.classList.add('open');
+    });
     renderGrid(filter);
     if (updateUrl) {
       const url = new URL(window.location);
@@ -135,7 +178,7 @@
   function renderGrid(filter) {
     filtered = filter === 'all'
       ? allPhotos
-      : allPhotos.filter(p => (p.categories || []).includes(filter));
+      : allPhotos.filter(p => matchesFilter(p, filter));
 
     grid.innerHTML = filtered.map((p, i) => `
       <div class="photo-grid-item" data-index="${i}">
