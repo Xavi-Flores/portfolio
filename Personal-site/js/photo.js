@@ -71,7 +71,7 @@
 
   // ── Build filter pills from unique categories ─────────────────────────────
   function buildFilters() {
-    const categoryOrder = ['People', 'Places', 'Cars', 'Architecture', 'Sports', 'Other'];
+    const categoryOrder = ['People', 'Places', 'Architecture', 'Sports', 'Cars', 'Other'];
     const available = new Set();
     allPhotos.forEach(p => (p.categories || []).forEach(c => {
       available.add(c);

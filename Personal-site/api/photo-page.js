@@ -9,7 +9,7 @@
 import { getPhotos } from '../lib/photos.js';
 import { renderPage, escapeHtml } from '../lib/layout.js';
 
-const CATEGORY_ORDER = ['People', 'Places', 'Cars', 'Architecture', 'Sports', 'Other'];
+const CATEGORY_ORDER = ['People', 'Places', 'Architecture', 'Sports', 'Cars', 'Other'];
 
 // Mirrors SUBCATEGORIES in js/photo.js — keep the two in sync.
 const SUBCATEGORIES = {
