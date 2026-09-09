@@ -122,7 +122,10 @@
     activeFilter = filter;
     filterBar.querySelectorAll('.filter-btn').forEach(b => {
       const f = b.dataset.filter;
-      b.classList.toggle('active', f === filter || (SUBCATEGORIES[f] || []).includes(filter));
+      const childActive = (SUBCATEGORIES[f] || []).includes(filter);
+      b.classList.toggle('active', f === filter || childActive);
+      // Marks a parent whose subcategory is the active filter (green caret)
+      b.classList.toggle('sub-active', childActive);
     });
     // Keep a dropdown open only while its parent or one of its children is
     // active; opening a child directly (e.g. from a ?filter= link) reveals it

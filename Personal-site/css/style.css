@@ -522,6 +522,12 @@ header.solid {
   transform: rotate(0deg);
 }
 
+/* A green caret signals that one of the pill's subcategories is active */
+.filter-btn.sub-active .filter-caret {
+  color: #2ebd6b;
+  opacity: 1;
+}
+
 .filter-menu { display: none; }
 
 /* Mouse devices: hover dropdown below the parent pill. The bar stops being a
