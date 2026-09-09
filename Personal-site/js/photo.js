@@ -59,6 +59,7 @@
   // don't need both tags. Child names must be unique across parents.
   const SUBCATEGORIES = {
     Sports: ['F1', 'U.S. Open 2026', 'Baseball'],
+    Places: ['New York', 'Japan', 'South Korea'],
   };
   const PARENT_OF = {};
   Object.keys(SUBCATEGORIES).forEach(p => SUBCATEGORIES[p].forEach(c => { PARENT_OF[c] = p; }));

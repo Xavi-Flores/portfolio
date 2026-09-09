@@ -14,6 +14,7 @@ const CATEGORY_ORDER = ['People', 'Places', 'Cars', 'Architecture', 'Sports', 'O
 // Mirrors SUBCATEGORIES in js/photo.js — keep the two in sync.
 const SUBCATEGORIES = {
   Sports: ['F1', 'U.S. Open 2026', 'Baseball'],
+  Places: ['New York', 'Japan', 'South Korea'],
 };
 const PARENT_OF = {};
 Object.keys(SUBCATEGORIES).forEach(p => SUBCATEGORIES[p].forEach(c => { PARENT_OF[c] = p; }));
