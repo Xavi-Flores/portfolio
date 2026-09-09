@@ -30,7 +30,12 @@
         return res.json();
       })();
 
+      // Display order is randomized; the "order" field in photos.json is
+      // intentionally ignored here. Preloaded photos arrive pre-shuffled by
+      // the server — reshuffling those would visibly rearrange the
+      // server-rendered grid, so only shuffle when fetched from the API.
       allPhotos  = data.photos || [];
+      if (!window.__PRELOADED_PHOTOS__) shuffle(allPhotos);
 
       if (allPhotos.length === 0) {
         statusEl.textContent = 'No photos yet.';
@@ -97,6 +102,14 @@
     grid.querySelectorAll('.photo-grid-item').forEach(item => {
       item.addEventListener('click', () => open(parseInt(item.dataset.index)));
     });
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 
   function capitalize(str) {

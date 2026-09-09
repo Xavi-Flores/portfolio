@@ -15,6 +15,17 @@ function humanize(name) {
   return (name || '').replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
 }
 
+// Grid display order is randomized per render (cached by the CDN for 5 min);
+// client JS keeps this order to avoid a visible rearrange after hydration.
+// The "order" field in photos.json is not used for display.
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function renderPhotoItem(p, i) {
   const alt = escapeHtml(p.title || humanize(p.filename));
   return `
@@ -34,6 +45,7 @@ export default async function handler(req, res) {
 
   try {
     const data = await getPhotos();
+    shuffle(data.photos);
     photos = data.photos;
     preloaded = data;
   } catch (err) {
