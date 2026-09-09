@@ -23,9 +23,11 @@ export async function getPhotos() {
   const listUrl = `https://${host}/${zone}/`;
   const headers = { AccessKey: password, Accept: 'application/json' };
 
+  // photos.json is read from Storage (not the pull zone) so metadata edits
+  // show up immediately — the CDN caches it for up to 30 days otherwise.
   const [bunnyRes, metaRes] = await Promise.all([
     fetch(listUrl, { method: 'GET', headers }),
-    fetch(`${pullZone}/photos.json`, { cache: 'no-store' })
+    fetch(`https://${host}/${zone}/photos.json`, { headers })
       .then(r => r.ok ? r.json() : [])
       .catch(() => [])
   ]);
