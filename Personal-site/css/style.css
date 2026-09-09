@@ -507,7 +507,9 @@ header.solid {
 
 .filter-caret {
   display: inline-block;
-  font-size: 0.8em;
+  font-size: 1.1em;
+  line-height: 1;         /* keep the bigger glyph from growing the pill */
+  vertical-align: middle;
   opacity: 0.7;
   margin-left: 3px;
   /* Points toward the label at rest; swings down when the menu shows */
