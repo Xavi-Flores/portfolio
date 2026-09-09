@@ -44,7 +44,7 @@
 
       statusEl.style.display = 'none';
       buildFilters();
-      renderGrid('all');
+      setFilter(initialFilter(), false);
 
     } catch (err) {
       statusEl.textContent = 'Could not load photos. Please try again later.';
@@ -78,13 +78,32 @@
     `).join('');
 
     filterBar.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeFilter = btn.dataset.filter;
-        renderGrid(activeFilter);
-      });
+      btn.addEventListener('click', () => setFilter(btn.dataset.filter, true));
     });
+  }
+
+  // ── Apply a filter: update pills, grid, and the shareable URL ────────────
+  function setFilter(filter, updateUrl) {
+    activeFilter = filter;
+    filterBar.querySelectorAll('.filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.filter === filter)
+    );
+    renderGrid(filter);
+    if (updateUrl) {
+      const url = new URL(window.location);
+      if (filter === 'all') url.searchParams.delete('filter');
+      else url.searchParams.set('filter', filter);
+      history.replaceState(null, '', url);
+    }
+  }
+
+  // Resolve ?filter= from the URL against the pills that actually exist;
+  // matches case-insensitively and falls back to "all" for unknown values.
+  function initialFilter() {
+    const param = new URLSearchParams(window.location.search).get('filter');
+    if (!param) return 'all';
+    const categories = [...filterBar.querySelectorAll('.filter-btn')].map(b => b.dataset.filter);
+    return categories.find(c => c.toLowerCase() === param.toLowerCase()) || 'all';
   }
 
   // ── Render grid for a given filter ───────────────────────────────────────
