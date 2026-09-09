@@ -45,6 +45,7 @@
       statusEl.style.display = 'none';
       buildFilters();
       setFilter(initialFilter(), false);
+      openPhotoFromUrl();
 
     } catch (err) {
       statusEl.textContent = 'Could not load photos. Please try again later.';
@@ -95,6 +96,30 @@
       else url.searchParams.set('filter', filter);
       history.replaceState(null, '', url);
     }
+  }
+
+  // Keep ?photo= in the URL in sync with the lightbox so the current view
+  // is always shareable; pass null to remove it.
+  function setPhotoParam(filename) {
+    const url = new URL(window.location);
+    if (filename) url.searchParams.set('photo', filename);
+    else url.searchParams.delete('photo');
+    history.replaceState(null, '', url);
+  }
+
+  // Open the photo named by ?photo= (shared lightbox links). If the photo
+  // isn't in the active filter, fall back to "all" so it can still open.
+  function openPhotoFromUrl() {
+    const param = new URLSearchParams(window.location.search).get('photo');
+    if (!param) return;
+    const match = p => p.filename.toLowerCase() === param.toLowerCase();
+    let idx = filtered.findIndex(match);
+    if (idx === -1 && allPhotos.some(match)) {
+      setFilter('all', true);
+      idx = filtered.findIndex(match);
+    }
+    if (idx !== -1) open(idx);
+    else setPhotoParam(null); // stale link — drop the bad param
   }
 
   // Resolve ?filter= from the URL against the pills that actually exist;
@@ -149,6 +174,7 @@
 
   function updateLightbox() {
     const photo      = filtered[current];
+    setPhotoParam(photo.filename);
     lbImg.src        = photo.url;
     lbImg.alt        = photo.title || humanize(photo.filename);
     lbCounter.textContent = (current + 1) + ' / ' + filtered.length;
@@ -167,6 +193,7 @@
     lightbox.classList.remove('open');
     lbImg.src = '';
     document.body.style.overflow = '';
+    setPhotoParam(null);
   }
 
   function prev() {
