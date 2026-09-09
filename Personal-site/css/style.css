@@ -567,7 +567,7 @@ header.solid {
   object-fit: contain;
   display: block;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .lightbox-close {
