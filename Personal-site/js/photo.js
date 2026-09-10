@@ -44,6 +44,7 @@
 
       statusEl.style.display = 'none';
       buildFilters();
+      buildGrid();
       setFilter(initialFilter(), false);
       openPhotoFromUrl();
 
@@ -188,20 +189,33 @@
     return categories.find(c => c.toLowerCase() === param.toLowerCase()) || 'all';
   }
 
-  // ── Render grid for a given filter ───────────────────────────────────────
-  function renderGrid(filter) {
-    filtered = filter === 'all'
-      ? allPhotos
-      : allPhotos.filter(p => matchesFilter(p, filter));
-
-    grid.innerHTML = filtered.map((p, i) => `
+  // ── Photo grid ────────────────────────────────────────────────────────────
+  // Built once with every photo; filtering only toggles visibility. This
+  // keeps filter taps cheap (no re-parsing/re-decoding all the images), so
+  // the submenu animation isn't starved mid-transition.
+  function buildGrid() {
+    grid.innerHTML = allPhotos.map((p, i) => `
       <div class="photo-grid-item" data-index="${i}">
         <img src="${p.url}" alt="${p.title || humanize(p.filename)}" loading="lazy" />
       </div>
     `).join('');
 
     grid.querySelectorAll('.photo-grid-item').forEach(item => {
-      item.addEventListener('click', () => open(parseInt(item.dataset.index)));
+      item.addEventListener('click', () => {
+        const photo = allPhotos[parseInt(item.dataset.index)];
+        open(filtered.indexOf(photo));
+      });
+    });
+  }
+
+  function renderGrid(filter) {
+    filtered = filter === 'all'
+      ? allPhotos
+      : allPhotos.filter(p => matchesFilter(p, filter));
+
+    const shown = new Set(filtered);
+    grid.querySelectorAll('.photo-grid-item').forEach(item => {
+      item.style.display = shown.has(allPhotos[parseInt(item.dataset.index)]) ? '' : 'none';
     });
   }
 

@@ -583,17 +583,13 @@ header.solid {
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
-    margin-left: 0;
-    transition: width 0.3s ease, opacity 0.25s ease,
-                margin-left 0.3s ease, visibility 0s 0.3s;
+    transition: width 0.3s ease, opacity 0.25s ease, visibility 0s 0.3s;
   }
 
   .filter-group.open .filter-menu {
     opacity: 1;
     visibility: visible;
-    margin-left: 8px;
-    transition: width 0.3s ease, opacity 0.25s ease,
-                margin-left 0.3s ease, visibility 0s;
+    transition: width 0.3s ease, opacity 0.25s ease, visibility 0s;
   }
 
   .filter-menu-inner {
@@ -601,6 +597,7 @@ header.solid {
     align-items: center;
     gap: 8px;
     width: max-content;
+    padding-left: 8px; /* spacing to the parent pill, inside the clip */
   }
 }
 
