@@ -560,6 +560,17 @@ header.solid {
 /* Touch devices: tapping the parent pill expands its children inline in the
    scrollable bar (no hover available). */
 @media (hover: none), (pointer: coarse) {
+  /* Bubble around the expanded parent + its subcategories, so it reads as
+     one group. outline (not border) so the bar's layout doesn't shift. */
+  .filter-group {
+    border-radius: 100px;
+  }
+
+  .filter-group.open {
+    outline: 1px solid #4a9eff;
+    outline-offset: 3px;
+  }
+
   .filter-group.open .filter-menu { display: block; margin-left: 8px; }
 
   .filter-menu-inner {
