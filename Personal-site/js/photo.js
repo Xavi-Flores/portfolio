@@ -108,12 +108,14 @@
 
     filterBar.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        setFilter(btn.dataset.filter, true);
         // A parent pill also toggles its dropdown (matters on touch devices,
-        // where there is no hover)
-        if (btn.nextElementSibling && btn.nextElementSibling.classList.contains('filter-menu')) {
-          btn.closest('.filter-group').classList.toggle('open');
-        }
+        // where there is no hover). setFilter collapses every group, so
+        // remember this group's state to invert it afterwards.
+        const isParent = btn.nextElementSibling && btn.nextElementSibling.classList.contains('filter-menu');
+        const group    = isParent ? btn.closest('.filter-group') : null;
+        const wasOpen  = group && group.classList.contains('open');
+        setFilter(btn.dataset.filter, true);
+        if (group) group.classList.toggle('open', !wasOpen);
       });
     });
   }
@@ -128,14 +130,10 @@
       // Marks a parent whose subcategory is the active filter (green caret)
       b.classList.toggle('sub-active', childActive);
     });
-    // Keep a dropdown open only while its parent or one of its children is
-    // active; opening a child directly (e.g. from a ?filter= link) reveals it
-    filterBar.querySelectorAll('.filter-group').forEach(g => {
-      const parent = g.querySelector('.filter-btn').dataset.filter;
-      const related = parent === filter || (SUBCATEGORIES[parent] || []).includes(filter);
-      if (!related) g.classList.remove('open');
-      else if (PARENT_OF[filter] === parent) g.classList.add('open');
-    });
+    // Any selection collapses expanded dropdowns — picking a subcategory
+    // folds the group back to its parent pill (white, green caret). The
+    // parent pill's own click handler reopens its group as needed.
+    filterBar.querySelectorAll('.filter-group').forEach(g => g.classList.remove('open'));
     renderGrid(filter);
     if (updateUrl) {
       const url = new URL(window.location);
