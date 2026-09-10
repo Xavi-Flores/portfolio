@@ -566,19 +566,41 @@ header.solid {
      one group. outline (not border) so the bar's layout doesn't shift. */
   .filter-group {
     border-radius: 100px;
+    outline: 1px solid transparent;
+    outline-offset: 3px;
+    transition: outline-color 0.3s ease;
   }
 
   .filter-group.open {
-    outline: 1px solid #4a9eff;
-    outline-offset: 3px;
+    outline-color: #4a9eff;
   }
 
-  .filter-group.open .filter-menu { display: block; margin-left: 8px; }
+  /* Subcategories slide open/closed. photo.js sets the open width inline,
+     measured from the content, since auto width can't be transitioned. */
+  .filter-menu {
+    display: block;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    margin-left: 0;
+    transition: width 0.3s ease, opacity 0.25s ease,
+                margin-left 0.3s ease, visibility 0s 0.3s;
+  }
+
+  .filter-group.open .filter-menu {
+    opacity: 1;
+    visibility: visible;
+    margin-left: 8px;
+    transition: width 0.3s ease, opacity 0.25s ease,
+                margin-left 0.3s ease, visibility 0s;
+  }
 
   .filter-menu-inner {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: max-content;
   }
 }
 

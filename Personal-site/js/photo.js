@@ -116,6 +116,7 @@
         const wasOpen  = group && group.classList.contains('open');
         setFilter(btn.dataset.filter, true);
         if (group) group.classList.toggle('open', !wasOpen);
+        syncMenuWidths();
       });
     });
   }
@@ -134,6 +135,7 @@
     // folds the group back to its parent pill (white, green caret). The
     // parent pill's own click handler reopens its group as needed.
     filterBar.querySelectorAll('.filter-group').forEach(g => g.classList.remove('open'));
+    syncMenuWidths();
     renderGrid(filter);
     if (updateUrl) {
       const url = new URL(window.location);
@@ -141,6 +143,16 @@
       else url.searchParams.set('filter', filter);
       history.replaceState(null, '', url);
     }
+  }
+
+  // On touch devices the inline submenu's width is transitioned in CSS, but
+  // its open width has to be measured from content (auto isn't animatable).
+  function syncMenuWidths() {
+    if (!window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+    filterBar.querySelectorAll('.filter-group').forEach(g => {
+      const menu = g.querySelector('.filter-menu');
+      menu.style.width = g.classList.contains('open') ? menu.scrollWidth + 'px' : '0px';
+    });
   }
 
   // Keep ?photo= in the URL in sync with the lightbox so the current view
