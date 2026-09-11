@@ -118,6 +118,11 @@
         setFilter(btn.dataset.filter, true);
         if (group) group.classList.toggle('open', !wasOpen);
         syncMenuWidths();
+        // On touch, slide an opening group to the bar's left edge so its
+        // subcategories are on screen without scrolling right
+        if (group && !wasOpen && window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+          filterBar.scrollTo({ left: group.offsetLeft - 12, behavior: 'smooth' });
+        }
       });
     });
   }
